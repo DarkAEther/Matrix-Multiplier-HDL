@@ -1,5 +1,24 @@
-module full_adder_8bit(input wire[7:0] a,b,output reg[7:0] sum,output reg cout);
-        wire t[8:0];
+module mat_2x2_multiplier(input wire[3:0] a,b,c,d,e,f,g,h,output wire[7:0] w,x,y,z);
+        wire[7:0] p,q,r,s,t,u,v,k; wire[7:0] temp;
+        multiplier_4bit m1(a,e,p);
+        multiplier_4bit m2(b,g,q);
+        full_adder_8bit f1(p,q,w,temp[0]);
+
+        multiplier_4bit m3(a,f,r);
+        multiplier_4bit m4(b,h,s);
+        full_adder_8bit f2(r,s,x,temp[1]);
+
+        multiplier_4bit m5(c,e,t);
+        multiplier_4bit m6(d,g,u);
+        full_adder_8bit f3(t,u,y,temp[2]);
+
+        multiplier_4bit m7(c,f,v);
+        multiplier_4bit m8(d,h,k);
+        full_adder_8bit f4(v,k,z,temp[3]);
+endmodule
+
+module full_adder_8bit(input wire[7:0] a,b,output wire[7:0] sum,output wire cout);
+        wire[8:0] t;
         full_adder_single f1(a[0],b[0],1'b0,sum[0],t[0]);
         full_adder_single f2(a[1],b[1],t[0],sum[1],t[1]);
         full_adder_single f3(a[2],b[2],t[1],sum[2],t[2]);
@@ -10,8 +29,15 @@ module full_adder_8bit(input wire[7:0] a,b,output reg[7:0] sum,output reg cout);
         full_adder_single f8(a[7],b[7],t[6],sum[7],cout);
 endmodule
 
-module multiplier_4bit(input wire[3:0] a, b, output reg[7:0] product);
-        wire t[20:0]; wire c[20:0];
+module full_adder_4bit(input wire[3:0] a,b,output wire[3:0] sum,output wire cout);
+        wire[3:0] t;
+        full_adder_single f1(a[0],b[0],1'b0,sum[0],t[0]);
+        full_adder_single f2(a[1],b[1],t[0],sum[1],t[1]);
+        full_adder_single f3(a[2],b[2],t[1],sum[2],t[2]);
+        full_adder_single f4(a[3],b[3],t[2],sum[3],cout);
+endmodule
+module multiplier_4bit(input wire[3:0] a, b, output wire[7:0] product);
+        wire[20:0] t; wire[20:0] c;
         and2 a1(a[0],b[0],product[0]);
 
         and2 a2(a[1],b[0],t[0]);
@@ -49,18 +75,18 @@ module multiplier_4bit(input wire[3:0] a, b, output reg[7:0] product);
 
 endmodule
 
-module full_adder_single(input wire a, b, cin output reg sum, cout);
-        wire t[4:0];
+module full_adder_single(input wire a, b, cin, output wire sum, cout);
+        wire[4:0] t;
         xor2 x1(a,b,t[0]);
         xor2 x2(t[0],cin,sum);
         and2 a1(a,b,t[1]);
         and2 a2(a,cin,t[2]);
         and2 a3(b,cin,t[3]);
-        and2 a4(t[1],t[2],t[4]);
-        and2 a5(t[4],t[3],cout);
+        or2 a4(t[1],t[2],t[4]);
+        or2 a5(t[4],t[3],cout);
 endmodule
 
-module half_adder_single(input wire a, b, output reg sum,cout);
+module half_adder_single(input wire a, b, output wire sum,cout);
         xor2 x1(a,b,sum);
         and2 a1(a,b,cout);
 endmodule
