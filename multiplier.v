@@ -1,3 +1,30 @@
+module mat_4x4_multiplier(input wire[3:0] a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,a1,b1,c1,d1,e1,f1,g1,h1,i1,j1,k1,l1,m1,n1,o1,p1, output wire[7:0] q,r,s,t,u,v,w,x,y,z,a2,b2,c2,d2,e2,f2);
+        wire [7:0] tv[32:0];
+        mat_2x2_multiplier mk1(a,b,e,f,a1,b1,e1,f1,tv[0],tv[1],tv[2],tv[3]);
+        mat_2x2_multiplier mk2(c,d,g,h,i1,j1,m1,n1,tv[4],tv[5],tv[6],tv[7]);
+        mat_2x2_adder ak1(tv[0],tv[1],tv[2],tv[3],tv[4],tv[5],tv[6],tv[7],q,r,u,v);
+
+        mat_2x2_multiplier mk3(a,b,e,f,c1,d1,g1,h1, tv[8],tv[9],tv[10],tv[11]);
+        mat_2x2_multiplier mk4(c,d,g,h,k1,l1,o1,p1, tv[12],tv[13],tv[14],tv[15]);
+        mat_2x2_adder ak2(tv[8],tv[9],tv[10],tv[11],tv[12],tv[13],tv[14],tv[15],s,t,w,x);
+
+        mat_2x2_multiplier mk5(i,j,m,n,a1,b1,e1,f1, tv[16],tv[17],tv[18],tv[19]);
+        mat_2x2_multiplier mk6(k,l,o,p,i1,j1,m1,n1, tv[20],tv[21],tv[22],tv[23]);
+        mat_2x2_adder ak3(tv[16],tv[17],tv[18],tv[19],tv[20],tv[21],tv[22],tv[23],y,z,c2,d2);
+
+        mat_2x2_multiplier mk7(i,j,m,n,c1,d1,g1,h1, tv[24],tv[25],tv[26],tv[27]);
+        mat_2x2_multiplier mk8(k,l,o,p,k1,l1,o1,p1, tv[28],tv[29],tv[30],tv[31]);
+        mat_2x2_adder ak4(tv[24],tv[25],tv[26],tv[27],tv[28],tv[29],tv[30],tv[31],a2,b2,e2,f2);
+endmodule
+
+module mat_2x2_adder(input wire[7:0] a,b,c,d,e,f,g,h,output wire[7:0] w,x,y,z);
+        wire [4:0] t;
+        full_adder_8bit f1(a,e,w,t[0]);
+        full_adder_8bit f2(b,f,x,t[1]);
+        full_adder_8bit f3(c,g,y,t[2]);
+        full_adder_8bit f4(d,h,z,t[3]);
+endmodule
+
 module mat_2x2_multiplier(input wire[3:0] a,b,c,d,e,f,g,h,output wire[7:0] w,x,y,z);
         wire[7:0] p,q,r,s,t,u,v,k; wire[7:0] temp;
         multiplier_4bit m1(a,e,p);
